@@ -3,7 +3,6 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/UYousafzai/llm_xlstm)
 ![GitHub issues](https://img.shields.io/github/issues/UYousafzai/llm_xlstm)
 ![GitHub stars](https://img.shields.io/github/stars/UYousafzai/llm_xlstm)
-![License](https://img.shields.io/github/license/UYousafzai/llm_xlstm)
 
 This repository will contain the essential assets and components for building xLSTM-based (Extended Long Short-Term Memory) Large Language Model (LLM) pipelines. The goal is to provide a comprehensive toolkit for researchers and developers working on advanced natural language processing tasks.
 
