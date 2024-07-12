@@ -1,0 +1,7 @@
+# Model configuration
+embedding_size: 128
+hidden_size: 2046
+num_layers: 1
+num_blocks: 2
+lstm_type: slstm  # 'slstm' or 'mlstm'
+dropout: 0.1

@@ -1,0 +1,4 @@
+"Python is a great programming language for NLP tasks.",
+"LSTMs are effective for sequence modeling.",
+"The quick brown fox jumps over the lazy dog.",
+"Hello, world! How are you doing today?",

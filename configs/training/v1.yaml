@@ -1,0 +1,6 @@
+# Training configuration
+num_epochs: 20
+learning_rate: 0.0001
+clip_value: 1.0
+batch_size: 64
+subset_size: 1024

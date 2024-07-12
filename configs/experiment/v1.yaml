@@ -1,0 +1,6 @@
+experiment:
+    name: "testing_pipeline"
+    txt_file_path: "./data/raw_test/test.txt"
+    base_config: "./configs/base/v1.yaml"
+    model_config: "./configs/model/v1.yaml"
+    training_config: "./configs/training/v1.yaml"
