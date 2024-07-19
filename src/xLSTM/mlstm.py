@@ -59,9 +59,9 @@ class mLSTM(nn.Module):
         for t in range(seq_length):
             x = input_seq[:, t, :]
             for layer_idx, layer in enumerate(self.layers):
-                h, C = hidden_state[layer_idx]
-                h, C = layer(x, (h, C))
-                hidden_state[layer_idx] = (h, C)
+                h, C, n = hidden_state[layer_idx]
+                h, C, n = layer(x, (h, C, n))
+                hidden_state[layer_idx] = (h, C, n)
                 x = self.dropout_layer(h) if layer_idx < self.num_layers - 1 else h
             outputs.append(x)
         
@@ -70,7 +70,8 @@ class mLSTM(nn.Module):
     def init_hidden(self, batch_size):
         """Initialize hidden state for all layers."""
         return [(torch.zeros(batch_size, self.hidden_size, device=self.layers[0].weight_ih.device),
-                 torch.zeros(batch_size, self.hidden_size, self.hidden_size, device=self.layers[0].weight_ih.device))
+                 torch.zeros(batch_size, self.hidden_size, self.hidden_size, device=self.layers[0].weight_ih.device),
+                 torch.zeros(batch_size, self.hidden_size, device=self.layers[0].weight_ih.device))
                 for _ in range(self.num_layers)]
 
 class mLSTMCell(nn.Module):
@@ -122,7 +123,7 @@ class mLSTMCell(nn.Module):
         Returns:
             tuple: New hidden state and cell state.
         """
-        h, C = hx
+        h, C, n = hx
         gates = F.linear(input, self.weight_ih, self.bias) + F.linear(h, self.weight_hh)
         
         i, f, o = gates.chunk(3, 1)
@@ -135,7 +136,13 @@ class mLSTMCell(nn.Module):
         k = self.W_k(input)
         v = self.W_v(input)
         
+        n = f * n + i * k
+
+        h_tilde = torch.bmm(q.unsqueeze(1), C).squeeze(1)
         C = f.unsqueeze(2) * C + i.unsqueeze(2) * torch.bmm(v.unsqueeze(2), k.unsqueeze(1))
-        h = o * torch.bmm(q.unsqueeze(1), C).squeeze(1)
         
-        return h, C
+        denominator = torch.max(torch.abs(torch.sum(n * q, dim=1, keepdim=True)), torch.tensor(1.0, device=h_tilde.device))
+
+        h = o * (h_tilde / denominator)
+        
+        return h, C, n
