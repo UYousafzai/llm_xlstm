@@ -129,7 +129,8 @@ class mLSTMCell(nn.Module):
         i, f, o = gates.chunk(3, 1)
         
         i = torch.exp(i)  # Exponential input gate
-        f = torch.exp(f)  # Exponential forget gate
+        f = torch.sigmoid(f)  # Sigmoid forget gate
+        # f = torch.exp(f)  # Exponential forget gate (this can either be exponential or sigmoid)
         o = torch.sigmoid(o)
         
         q = self.W_q(input)
